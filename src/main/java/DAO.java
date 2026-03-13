@@ -42,13 +42,13 @@ public class DAO {
 		return status;
 	}
 	
-	public boolean inserirUsuario(Usuario usuario) {
+	public boolean inserirCarro(Carro carro) {
 		boolean status = false;
 		try {  
 			Statement st = conexao.createStatement();
-			st.executeUpdate("INSERT INTO pessoas (codigo, nome, sobrenome, sexo) "
-					       + "VALUES ("+usuario.getCodigo()+ ", '" + usuario.getNome() + "', '"  
-					       + usuario.getSobrenome() + "', '" + usuario.getSexo() + "');");
+			st.executeUpdate("INSERT INTO carros (id, modelo, marca, tipo) "
+					       + "VALUES ("+carro.getId()+ ", '" + carro.getModelo() + "', '"  
+					       + carro.getMarca() + "', '" + carro.getTipo() + "');");
 			st.close();
 			status = true;
 		} catch (SQLException u) {  
@@ -57,13 +57,13 @@ public class DAO {
 		return status;
 	}
 	
-	public boolean atualizarUsuario(Usuario usuario) {
+	public boolean atualizarCarro(Carro carro) {
 		boolean status = false;
 		try {  
 			Statement st = conexao.createStatement();
-			String sql = "UPDATE usuario SET nome = '" + usuario.getNome() + "', sobrenome = '"  
-				       + usuario.getSobrenome() + "', sexo = '" + usuario.getSexo() + "'"
-					   + " WHERE codigo = " + usuario.getCodigo();
+			String sql = "UPDATE carros SET modelo = '" + carro.getModelo() + "', marca = '"  
+				       + carro.getMarca() + "', tipo = '" + carro.getTipo() + "'"
+					   + " WHERE id = " + carro.getId();
 			st.executeUpdate(sql);
 			st.close();
 			status = true;
@@ -73,11 +73,11 @@ public class DAO {
 		return status;
 	}
 	
-	public boolean excluirUsuario(int codigo) {
+	public boolean excluirCarro(int id) {
 		boolean status = false;
 		try {  
 			Statement st = conexao.createStatement();
-			st.executeUpdate("DELETE FROM usuario WHERE codigo = " + codigo);
+			st.executeUpdate("DELETE FROM carros WHERE id = " + id);
 			st.close();
 			status = true;
 		} catch (SQLException u) {  
@@ -86,47 +86,47 @@ public class DAO {
 		return status;
 	}
 	
-	public Usuario[] getUsuarios() {
-		Usuario[] usuarios = null;
+	public Carro[] getCarros() {
+		Carro[] carros = null;
 		try {
 			Statement st = conexao.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
-			ResultSet rs = st.executeQuery("SELECT * FROM usuario");		
+			ResultSet rs = st.executeQuery("SELECT * FROM carros");		
 	         if(rs.next()){
 	             rs.last();
-	             usuarios = new Usuario[rs.getRow()];
+	             carros = new Carro[rs.getRow()];
 	             rs.beforeFirst();
 
 	             for(int i = 0; rs.next(); i++) {
-	                usuarios[i] = new Usuario(rs.getInt("codigo"), rs.getString("nome"), 
-	                		                  rs.getString("sobrenome"), rs.getString("sexo").charAt(0));
+	                carros[i] = new Carro(rs.getInt("id"), rs.getString("modelo"), 
+	                		                  rs.getString("marca"), rs.getString("tipo").charAt(0));
 	             }
 	          }
 	          st.close();
 		} catch (Exception e) {
 			System.err.println(e.getMessage());
 		}
-		return usuarios;
+		return carros;
 	}
 
-	public Usuario[] getUsuariosMasculinos() {
-		Usuario[] usuarios = null;
+	public Carro[] getCarrosSedan() {
+		Carro[] carros = null;
 		try {
 			Statement st = conexao.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
-			ResultSet rs = st.executeQuery("SELECT * FROM usuario WHERE sexo = 'M'");		
+			ResultSet rs = st.executeQuery("SELECT * FROM carros WHERE tipo = 'S'");		
 	         if(rs.next()){
 	             rs.last();
-	             usuarios = new Usuario[rs.getRow()];
+	             carros = new Carro[rs.getRow()];
 	             rs.beforeFirst();
 
 	             for(int i = 0; rs.next(); i++) {
-		                usuarios[i] = new Usuario(rs.getInt("codigo"), rs.getString("nome"), 
-                         		                  rs.getString("sobrenome"), rs.getString("sexo").charAt(0));
+		                carros[i] = new Carro(rs.getInt("id"), rs.getString("modelo"), 
+                         		                  rs.getString("marca"), rs.getString("tipo").charAt(0));
 	             }
 	          }
 	          st.close();
 		} catch (Exception e) {
 			System.err.println(e.getMessage());
 		}
-		return usuarios;
+		return carros;
 	}
 }
